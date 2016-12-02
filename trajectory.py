@@ -40,12 +40,19 @@ def make_image(fname, bg, video_name, step=10):
             break
 
         diff = cv2.absdiff(bg, cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY))
-        mask = numpy.array([(diff > numpy.average(diff) * 4) * (1.0 if ((i + 1) % step == 0) else 0.1)] * 3).transpose((1, 2, 0))
+        mask = cv2.GaussianBlur(numpy.array([(diff > numpy.average(diff) * 4) * (1.0 if ((i + 1) % step == 0) else 0.1)] * 3).transpose((1, 2, 0)), (9, 9), 10)
 
         img = img * (1.0 - mask) + frame * mask
 
-        cv2.imshow('progress', img.astype(numpy.uint8))
-        out.write(img.astype(numpy.uint8))
+        if (i + 1) % step != 0:
+            vmask = cv2.GaussianBlur(numpy.array([(diff > numpy.average(diff) * 4) * 1.0] * 3).transpose((1, 2, 0)), (9, 9), 10)
+
+            vimg = (img * (1.0 - vmask) + frame * vmask).astype(numpy.uint8)
+        else:
+            vimg = img.astype(numpy.uint8)
+
+        cv2.imshow('progress', vimg)
+        out.write(vimg)
         cv2.waitKey(1)
 
     vid.release()
