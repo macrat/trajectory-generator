@@ -63,5 +63,5 @@ if __name__ == '__main__':
 
         id_ = int(fname[len('original/'):-len('.mp4')])
         bg = make_bg(fname)
-        img = make_image(fname, bg, 'tmp/{0:04}.mp4'.format(id_ + 1))
-        cv2.imwrite('image/{0:04}.jpg'.format(id_ + 1), img)
+        img = make_image(fname, bg, 'tmp/{0:04}.mp4'.format(id_))
+        cv2.imwrite('image/{0:04}.jpg'.format(id_), img)
